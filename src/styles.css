@@ -53,7 +53,15 @@ img {
     display: block;
 }
 
+body {
+    background-color: var(--body-color);
+}
+
 .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: 60px 1rem 1rem 1rem;
     max-width: 1024px;
     margin: 0 auto;
@@ -61,10 +69,24 @@ img {
 
 .products {
     display: grid;
+    grid-template-columns: 262px;
     gap: 2rem;
     border-radius: 1rem;
     overflow: hidden;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+@media (min-width: 576px) {
+    .products {
+        grid-template-columns: repeat(2, 262px);
+        gap: 3rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .products {
+        grid-template-columns: repeat(3,262px);
+        gap: 5rem;
+    }
 }
 
 .product {
@@ -73,7 +95,7 @@ img {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    /* box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); */
     position: relative;
 }
 
@@ -94,8 +116,8 @@ img {
 
 .btnplus {
     border: none;
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     font-size: 2rem;
     cursor: pointer;
     color: var(--button-color);
@@ -103,9 +125,8 @@ img {
     border-radius: 50%;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     position: absolute;
-    bottom: 22%;
+    bottom: 24%;
     right: 5%;
-    
 }
 
 .btnplus:hover {
@@ -116,11 +137,12 @@ img {
 
 .product__info {
     position: relative;
-    padding: 2rem;
+    padding: 16px 0px 20px 16px;
 }
 
 .product__info h2:nth-child(1) {
     display: flex;
+    flex-direction: row;
     align-items: center;
     font-size: var(--biggest-font-size);
     font-weight: var(--font-bold);
@@ -137,4 +159,13 @@ img {
 
 .product__info h3{
     font-size: var(--h2-font-size);
+}
+
+svg{
+    fill: var(--first-color);
+}
+
+div svg {
+    width: 200px;
+    height: 200px;
 }
