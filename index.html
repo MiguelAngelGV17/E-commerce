@@ -12,26 +12,6 @@
 
 <body>
   <div class="container">
-
-    <nav class="logo">
-      <img class="headerMain" src="./src/img/favicon.png" alt="menu logo">
-          <li><a href="">store</a></li>
-      </nav>
-      <nav class="navbar">
-          <ul class="navbar-items">
-              <li><a class="navarItem" href="#">Home</a></li>
-              <li><a  href="#">products</a></li>
-          </ul>
-      </nav>
-      <nav class="nav_icons">
-          <div class="iconMoon"></div>
-              <img class="luna" src="./src/img/luna.png" alt="luna">
-          </div>
-          <div class="iconCart">
-              <img class="cart" src="./src/img/bolsa-de-la-compra.png" alt="cartera">
-              <span class="count">0</span>
-          </div>
-          
     <h1>Nuestro</h1>
     <div>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48.92 56.48" class="nav__logo-icon">
@@ -48,31 +28,46 @@
     </div>
     <div class="filters_mixitup">
       <div class="tags">
-        <div data-filter="Todos">
+        <div data-filter="all">
           <h3>Show All</h3>
           <span>Show all products</span>
         </div>
-        <div data-filter="Hoodies">
+        <div data-filter=".Hood">
           <h3>Hoodies</h3>
           <span>3 products</span>
         </div>
-        <div data-filter="Shirts">
+        <div data-filter=".Shir">
           <h3>Shirts</h3>
           <span>4 products</span>
         </div>
-        <div data-filter="Sweatshirts">
+        <div data-filter=".Sweat">
           <h3>Sweatshirts</h3>
           <span>4 products</span>
         </div>
       </div>
     </div>
-    <div class="products">
-      <div class="hoddies">
-
+    <div class="content_element">
+      <div class="products">
+        <div class="element  Hood"></div>
+        <div class="element Shir"></div>
+        <div class="element  Sweat"></div>
       </div>
     </div>
   </div>
-  <script src="./src/main.js"></script>
+
+<script src="./src/main.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mixitup/3.3.1/mixitup.min.js" integrity="sha512-nKZDK+ztK6Ug+2B6DZx+QtgeyAmo9YThZob8O3xgjqhw2IVQdAITFasl/jqbyDwclMkLXFOZRiytnUrXk/PM6A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    mixitup(".products", {
+      selectors: {
+        target: ".element"
+      },
+      animation: {
+        duration: 500
+      }
+    }).filter("all")
+  </script>
 </body>
 
 </html>
