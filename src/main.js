@@ -104,9 +104,9 @@ function printProductsInCart() {
                 </div>
 
                 <div class="product__options" id="${id}">
-                    <i class='bx bx-minus'>-</i>                    
-                    <i class='bx bx-plus'>+</i>
-                    <i class='bx bx-trash'>🗑</i>
+                    <i class='bx bx-minus'></i>                    
+                    <i class='bx bx-plus'></i>
+                    <i class='bx bx-trash'></i>
                 </div>
             </div>
         `;

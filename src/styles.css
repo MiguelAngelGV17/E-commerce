@@ -529,9 +529,9 @@ svg{
 
 
 .contentCar {
-    height: calc(100vh - 50px);
+    height: calc(95vh);
     width: 400px;
-    top: 50px;
+    top: 0;
     right: 0;
     position: fixed;
     background-color: #579bb1;
