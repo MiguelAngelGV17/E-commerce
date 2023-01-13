@@ -1,5 +1,4 @@
-// import cart from './cart.js';
-    
+
 let productsClothes = [
     {
         id: "0",
@@ -25,23 +24,43 @@ let productsClothes = [
 ];
 
 
-{
-    const iconCart = document.querySelector(".cart");
-    const contentCart = document.querySelector(".contentCar");
-
-    iconCart.addEventListener("click", function () {
-        contentCart.classList.toggle("contentCar__show");
-    });
-}
-
+const iconCart = document.querySelector(".cart");
+const close =document.querySelector(".bx-x")
+const contentCart = document.querySelector(".contentCar");
 const products = document.querySelector(".products");
 const cartProducts = document.querySelector(".carProducts");
 const carTotal = document.querySelector(".carTotal");
 const amountCart = document.querySelector(".count");
 
-let objCart = {};
+iconCart.addEventListener("click", function () {
+    contentCart.classList.toggle("contentCar__show");
+});
+close.addEventListener("click", function () {
+    contentCart.classList.toggle("contentCar__show");
+});
 
 
+productsClothes = JSON.parse(localStorage.getItem("productsClothes")) || productsClothes;
+let objCart = JSON.parse(localStorage.getItem("objCart")) || {};
+
+function verifyAddToCart(findProduct, id) {
+    if (findProduct.stock === objCart[id].amount) {
+        alert("We do not have enough in stock");
+    } else {
+        objCart[id].amount++;
+    }
+}
+
+function seacrProduct(id) {
+    return productsClothes.find(function (clothes) {
+        return clothes.id === id;
+    });
+}
+
+function deleteProduct(id) {
+    const res = confirm("Are you sure you want to delete this product?");
+    if (res) delete objCart[id];
+}
 
 function printAmountCart() {
     let sum = 0;
@@ -53,7 +72,7 @@ function printAmountCart() {
         return;
     }
 
-    amountCart.style.display = "inline-block";
+    amountCart.style.display = "flex";
 
     arrayCart.forEach(function ({ amount }) {
         sum += amount;
@@ -64,24 +83,45 @@ function printAmountCart() {
 
 function printTotalCart() {
     const arrayCart = Object.values(objCart);
-
+    let sumItems = 0;
+    let sum = 0;
     if (!arrayCart.length) {
         carTotal.innerHTML = `
-            <h3>No hay nada, a comprar!!!</h3>
+        <figure class="mycart__empty">
+            <img src="./src/img/empty-cart.png"alt="empty-cart">
+            <div class="emptyCart__info">
+                <h2>Your cart is empty</h2>
+                <p>You can add items to your cart by clicking on the "+" button on the product page.</p>
+                </div>
+                    <div>
+                    <p>${sumItems} Items</p>
+                    <div>
+                <h3>Total $${sum}.00</h3>
+                <button class="btn btn__buy" disabled='disabled'><i class='bx bx-check-shield'></i> Checkout</button>
+                </div>
+            </div>
+        </figure>
+        
         `;
 
         return;
     }
-
-    let sum = 0;
-
+    
+    
+    
     arrayCart.forEach(function ({ amount, price }) {
         sum += amount * price;
+        sumItems += amount;
     });
 
     carTotal.innerHTML = `
-            <h3>Total a pagar ${sum}</h3>
-            <button class="btn btn__buy">Comprar</button>
+    <div>
+        <div><p>${sumItems} Items</p></div>
+        <div>
+            <h3>Total $${sum}.00</h3>
+            <button class="btn btn__buy"><i class='bx bx-check-shield'></i> Checkout</button>
+        </div>
+    </div>
         `;
 }
 
@@ -90,28 +130,34 @@ function printProductsInCart() {
 
     const arrayCart = Object.values(objCart);
 
-    arrayCart.forEach(function ({ id, name, price, urlImage, amount }) {
+    arrayCart.forEach(function ({ id, name, price, urlImage, amount,stock }) {
+        let subtotal = 0
+        subtotal = amount * price
         html += `
             <div class="product">
                 <div class="product__img">
                     <img src="${urlImage}" alt="${name}" />
                 </div>
+                <div class="options">
 
                 <div class="product__info">
                     <p>${name}</p>
-                    <p>${price}</p>
-                    <p>Cant: ${amount}</p>
+                    <p><span>Stock: ${stock}</span>  |  $${price}.00</p>
+                    <div> Subtotal:$ ${subtotal}.00</div>
+                    </div>
+                
+                <div class="product__options" id="${id}">
+                    <span class='bx bx-minus simbolos'></span>  <span class='monto';> ${amount} unit</span>                
+                    <span class='bx bx-plus simbolos'></span>
+                    <span class='bx bx-trash'></span>
+                </div>
                 </div>
 
-                <div class="product__options" id="${id}">
-                    <i class='bx bx-minus'></i>                    
-                    <i class='bx bx-plus'></i>
-                    <i class='bx bx-trash'></i>
-                </div>
+                
             </div>
         `;
     });
-
+    
     cartProducts.innerHTML = html;
 }
 
@@ -149,38 +195,34 @@ products.addEventListener("click", function (e) {
         const id = e.target.parentElement.id;
 
         // vamos a obtener el producto por id
-        let findProduct = productsClothes.find(function (food) {
-            return food.id === id;
-        });
+        let findProduct = seacrProduct(id);
 
+        if (findProduct.stock === 0) return alert("We do not have enough in stock");
         // logica para el carrito
         if (objCart[id]) {
-            if (findProduct.stock === objCart[id].amount) {
-                alert("No tengo mas en stock");
-            } else {
-                objCart[id].amount++;
-            }
+            verifyAddToCart(findProduct, id);
+
         } else {
             objCart[id] = {
                 ...findProduct,
                 amount: 1,
             };
         }
+        localStorage.setItem("objCart", JSON.stringify(objCart));
     }
 
-    
     printProductsInCart();
     printTotalCart();
     printAmountCart();
 });
 
 cartProducts.addEventListener("click", function (e) {
+    
     if (e.target.classList.contains("bx-minus")) {
         const id = e.target.parentElement.id;
 
         if (objCart[id].amount === 1) {
-            const res = confirm("Seguro quieres eliminar este producto");
-            if (res) delete objCart[id];
+            deleteProduct(id);
         } else {
             objCart[id].amount--;
         }
@@ -188,51 +230,46 @@ cartProducts.addEventListener("click", function (e) {
 
     if (e.target.classList.contains("bx-plus")) {
         const id = e.target.parentElement.id;
-
-        let findProduct = productsClothes.find(function (food) {
-            return food.id === id;
-        });
-
-        if (findProduct.stock === objCart[id].amount) {
-            alert("No tengo mas en stock");
-        } else {
-            objCart[id].amount++;
-        }
+        let findProduct = seacrProduct(id);
+        verifyAddToCart(findProduct, id);
     }
-
     if (e.target.classList.contains("bx-trash")) {
         const id = e.target.parentElement.id;
-
-        const res = confirm("Seguro quieres eliminar este producto");
-        if (res) delete objCart[id];
+        deleteProduct(id);
     }
+    localStorage.setItem("objCart", JSON.stringify(objCart));
 
     printProductsInCart();
     printTotalCart();
     printAmountCart();
-});
+}
+
+);
 
 carTotal.addEventListener("click", function (e) {
     if (e.target.classList.contains("btn__buy")) {
-        const res = confirm("Seguro quieres hacer la compra");
+        const res = confirm("Are you sure you want to make the purchase?");
 
         if (!res) return;
 
         let newArray = [];
 
-        productsClothes.forEach(function (food) {
-            if (food.id === objCart[food.id]?.id) {
+        productsClothes.forEach(function (clothes) {
+            if (clothes.id === objCart[clothes.id]?.id) {
                 newArray.push({
-                    ...food,
-                    stock: food.stock - objCart[food.id].amount,
+                    ...clothes,
+                    stock: clothes.stock - objCart[clothes.id].amount,
                 });
             } else {
-                newArray.push(food);
+                newArray.push(clothes);
             }
         });
 
         productsClothes = newArray;
         objCart = {};
+
+        localStorage.setItem("objCart", JSON.stringify(objCart));
+        localStorage.setItem("productsClothes", JSON.stringify(productsClothes));
 
         printProducts();
         printProductsInCart();
@@ -241,7 +278,8 @@ carTotal.addEventListener("click", function (e) {
     }
 });
 
+
 printProducts();
 printTotalCart();
 printAmountCart();
-
+printProductsInCart();
